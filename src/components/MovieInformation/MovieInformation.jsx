@@ -1,53 +1,37 @@
-import React from "react";
-import {
-  Modal,
-  Typography,
-  Button,
-  ButtonGroup,
-  Grid,
-  Box,
-  CircularProgress,
-  useMediaQuery,
-  Rating,
-} from "@mui/material";
-import {
-  Movie as MovieIcon,
-  Theaters,
-  Language,
-  PlusOne,
-  Favorite,
-  FavoriteBorderOutlined,
-  Remove,
-  ArrowBack,
-} from "@mui/icons-material";
-import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import genreIcons from '../../assets/genres';
-import { selectGenreOrCategory } from "../../features/currentGenreOrCategory";
-import { useGetMovieQuery, useGetRecommendationsQuery, useGetListQuery } from '../../services/TMDB';
-import { userSelector } from "../../features/auth";
+import React, { useState, useEffect } from 'react';
+import { Modal, Typography, Button, ButtonGroup, Grid, Box, CircularProgress, useMediaQuery, Rating } from '@mui/material';
+import { Movie as MovieIcon, Theaters, Language, PlusOne, Favorite, FavoriteBorderOutlined, Remove, ArrowBack } from '@mui/icons-material';
+import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+
+import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import useStyles from './styles';
-import MovieList from "../MovieList/MovieList";
+import { useGetMovieQuery, useGetRecommendationsQuery, useGetListQuery } from '../../services/TMDB';
+import genreIcons from '../../assets/genres';
+import { MovieList } from '..';
+
+import { userSelector } from '../../features/auth';
 
 const MovieInformation = () => {
-  const user = useSelector(userSelector);
+  const { user } = useSelector(userSelector);
   const { id } = useParams();
   const classes = useStyles();
-  const { data, isFetching, error } = useGetMovieQuery(id);
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
 
-  const {data: recommendations, isFetching: isRecommendationsFetching} = useGetRecommendationsQuery({list: '/recommendations', movie_id: id});
+  const { data, isFetching, error } = useGetMovieQuery(id);
+  const { data: recommendations, isFetching: isRecommendationsFetching } = useGetRecommendationsQuery({ list: '/recommendations', movie_id: id });
 
-
+  const isMovieFavorited = false;
+const isMovieWatchlisted = false;  
   const addToFavorites=() =>{
 
   };
   const addToWatchlist = () =>{
 
   };
-const isMovieFavorited = false;
-const isMovieWatchlisted = false;
+
   if (isFetching) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center">
@@ -104,7 +88,7 @@ const isMovieWatchlisted = false;
                 {genre?.name}
               </Typography>
             </Link>
-          ))}
+          )) }
         </Grid>
         <Typography variant="h5" gutterBottom style={{ marginTop: '10px' }}>
           Overview
@@ -161,6 +145,23 @@ const isMovieWatchlisted = false;
           ? <MovieList movies={recommendations} numberOfMovies={12} />
           : <Box>Sorry, nothing was found.</Box>}
       </Box>
+      <Modal
+        closeAfterTransition
+        className={classes.modal}
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        {data?.videos?.results?.length > 0 && (
+          <iframe
+            autoPlay
+            className={classes.video}
+            frameBorder="0"
+            title="Trailer"
+            src={`https://www.youtube.com/embed/${data.videos.results[0].key}`}
+            allow="autoplay"
+          />
+        )}
+      </Modal>
     </Grid>
   );
 };
