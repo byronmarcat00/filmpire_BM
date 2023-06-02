@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   AppBar,
   IconButton,
@@ -8,7 +8,7 @@ import {
   Avatar,
   useMediaQuery,
   ButtonGroup,
-} from "@mui/material";
+} from '@mui/material';
 import {
   Menu,
   AccountCircle,
@@ -16,39 +16,39 @@ import {
   Brightness7,
   InstallMobileOutlined,
   Draw,
-} from "@mui/icons-material";
-import { useTheme } from "@mui/material/styles";
-import { Link } from "react-router-dom";
-import { SideBar } from "..";
-import useStyles from "./styles";
-import Search from "../Search/Search";
-import { fetchToken, createSessionId, moviesApi } from "../../utils";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser, userSelector } from "../../features/auth";
+} from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { SideBar } from '..';
+import useStyles from './styles';
+import Search from '../Search/Search';
+import { fetchToken, createSessionId, moviesApi } from '../../utils';
+import { setUser, userSelector } from '../../features/auth';
 
 const NavBar = () => {
   const { isAuthenticated, user } = useSelector(userSelector);
   const [mobileOpen, setMobileOpen] = useState(false);
   const classes = useStyles();
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery('(max-width:600px)');
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const token = localStorage.getItem("request_token");
-  const sessionIdFromLocalStorage = localStorage.getItem("session_id");
+  const token = localStorage.getItem('request_token');
+  const sessionIdFromLocalStorage = localStorage.getItem('session_id');
 
   useEffect(() => {
     const logInUser = async () => {
       if (token) {
         if (sessionIdFromLocalStorage) {
           const { data: userData } = await moviesApi.get(
-            `/account?session_id=${sessionIdFromLocalStorage}`
+            `/account?session_id=${sessionIdFromLocalStorage}`,
           );
           dispatch(setUser(userData));
         } else {
           const sessionId = await createSessionId();
           const { data: userData } = await moviesApi.get(
-            `/account?session_id=${sessionId}`
+            `/account?session_id=${sessionId}`,
           );
           dispatch(setUser(userData));
         }
@@ -65,7 +65,7 @@ const NavBar = () => {
             <IconButton
               color="inherit"
               edge="start"
-              style={{ outline: "none" }}
+              style={{ outline: 'none' }}
               onClick={() => setMobileOpen((prevMobileOpen) => !prevMobileOpen)}
               className={classes.menuButton}
             >
@@ -73,7 +73,7 @@ const NavBar = () => {
             </IconButton>
           )}
           <IconButton color="inherit" sx={{ ml: 1 }} onClick={() => {}}>
-            {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+            {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
           {!isMobile && <Search />}
           <div>

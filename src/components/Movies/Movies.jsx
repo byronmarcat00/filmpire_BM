@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   CircularProgress,
   useMediaQuery,
   Typography,
-} from "@mui/material";
-import { useSelector } from "react-redux";
+} from '@mui/material';
+import { useSelector } from 'react-redux';
 
-import { useGetMoviesQuery } from "../../services/TMDB";
-import MovieList from "../MovieList/MovieList";
-import { DateRange } from "@mui/icons-material";
-import { selectGenreOrCategory } from "../../features/currentGenreOrCategory";
+import { DateRange } from '@mui/icons-material';
+import { useGetMoviesQuery } from '../../services/TMDB';
+import MovieList from '../MovieList/MovieList';
+import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
+
 const Movies = () => {
   const [page, setPage] = useState(1);
 
   const { genreIdOrCategoryName, searchQuery } = useSelector(
-    (state) => state.currentGenreOrCategory
+    (state) => state.currentGenreOrCategory,
   );
   const { data, error, isFetching } = useGetMoviesQuery({
     genreIdOrCategoryName,
@@ -43,7 +44,7 @@ const Movies = () => {
     );
   }
 
-  if (error) return "An error has occurr";
+  if (error) return 'An error has occurr';
 
   return (
     <div>
